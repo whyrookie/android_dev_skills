@@ -1,6 +1,6 @@
 # 自定义View-实现简易车速器（真的够简易）
 
-　　自定义View是每个原生Android开发程序员必须要学会的内容,这次实现一个简易的车速器算是一次自定义View实战，项目比较简单，代码较少，但是自定义View的流程基本涉及到了,但本文不是一篇讲解如何自定义View的文章,如果想看讲解自定义View的文章,墙裂推荐博客:http://blog.csdn.net/aigestudio.    
+　　学习自定义View挺久了,好久没用都快忘了,这里实现一个简易的车速器算是一个回顾，项目比较简单，代码较少，但自定义View的流程基本都涉及到了.本文不是一篇讲解自定义View基础的文章,而是一个小的实战,如果想看讲解自定义View的文章,强烈推荐博客:http://blog.csdn.net/aigestudio,强烈=_=.    
 　　效果如下图:  
 
 ![](https://github.com/whyrookie/SpeedometerView/blob/master/images/SpeedometerView.gif)  
@@ -520,4 +520,4 @@ public class MainActivity extends AppCompatActivity {
 
 ```
 
-代码注释感觉已经很清楚了，这里也不废话了．所有的代码上面都贴出来了，源码地址https://github.com/whyrookie/SpeedometerView
+注释还是很清楚的,源码地址https://github.com/whyrookie/SpeedometerView
