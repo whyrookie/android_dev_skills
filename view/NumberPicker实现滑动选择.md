@@ -109,5 +109,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.Form
 ```
 
 以上就是NumberPicker的简单使用了，可以用它实现省市区联动(3个NumberPicker)，也可以实现充值打折金额滑动选择(比如充100(实付:90))等等.通过反射改变分割线的方法是在stackoverflow上看到的：
-改变分割线颜色:http://stackoverflow.com/questions/24233556/changing-numberpicker-divider-color
-改变文字颜色:http://stackoverflow.com/questions/22962075/change-the-text-color-of-numberpicker
+
+改变分割线颜色: http://stackoverflow.com/questions/24233556/changing-numberpicker-divider-color
+
+改变文字颜色: http://stackoverflow.com/questions/22962075/change-the-text-color-of-numberpicker
