@@ -1,6 +1,9 @@
 ## 自定义Toast
 
-平时一般只用默认的Toast，使用Toast.makeTest()方法调用，默认的风格是白字半透明灰框，经常与app的主题颜色不符，所以需要自定义Toast．
+平时一般只用默认的Toast，使用Toast.makeTest()方法调用，默认的风格是白字半透明灰框，经常与app的主题颜色不符，所以需要自定义Toast．效果图：
+
+![](https://github.com/whyrookie/android_dev_skills/blob/master/images/Peek%202017-01-14%2009-51.gif)
+
 
 显示定义需要的布局文件:layout/custom_toast.xml
 
