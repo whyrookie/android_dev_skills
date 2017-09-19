@@ -55,11 +55,11 @@ public class CircleImageView extends AppCompatImageView {
 }
 ```
 
-  mPaint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))：
+    mPaint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))：
 shader指定scacleBitmap将要覆盖的模式，REPEAT, MIRROR, 或者CLAMP,其他
 
 
-整个原理就是先获取ImageView:src设置的Drawable，然后利用Bitmap.createScaledBitmap()剪切合适的大小，将其设置给BitmapShader,
+    整个原理就是先获取ImageView:src设置的Drawable，然后利用Bitmap.createScaledBitmap()剪切合适的大小，将其设置给BitmapShader,
 用以填充到RoundRect中，再设置Xfermode,取二层图像交集的上层，调用canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()),getWidth()/2, getHeight()/2, mPaint)画出RoundRect, 由于RoundRect区域小于下层的区域(ImageView宽和高决定),效果就是只显示
 被scaleBitmap填充的RoundRect, 当然可通过设置RoundRect的参数实现不同的角度，这里直接设置radius为witdth和height的1/2。
 
@@ -105,5 +105,5 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-PorterDuffXfermode模式效果官网链接:
-https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html
+  PorterDuffXfermode模式效果官网链接:
+  https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html
