@@ -1,6 +1,8 @@
 ## 简单实现圆角图片CircleView
 
-首先继承ImageView,然后使用RoundRectShape在onDraw()中画出圆角矩形，就搞定了
+效果:
+
+![](https://github.com/whyrookie/android_dev_skills/blob/master/images/CircleImageView.png)
 
 CircleImageView代码：
 
