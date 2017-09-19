@@ -55,7 +55,7 @@ public class CircleImageView extends AppCompatImageView {
 }
 ```
 
-&emsp&emspm Paint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))：
+&emsp&emsp Paint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))：
 shader指定scacleBitmap将要覆盖的模式，REPEAT, MIRROR, 或者CLAMP,其他
 
 
