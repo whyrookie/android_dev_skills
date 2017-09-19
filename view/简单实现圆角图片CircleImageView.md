@@ -45,7 +45,8 @@ public class CircleImageView extends AppCompatImageView {
       mPaint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
 
       //设置两层图像叠加的模式,这里SRC_IN：显示两层图像交集的上层，这里上层是canvas绘制的RoundRect
-      //下层即ImageView设置的src图片，而mPaint.setShader指定了RoundRect被scaleBitmap填充，因此最终看到的被scaleBitmap填充的RoundRect.
+      //下层即ImageView设置的src图片，而mPaint.setShader指定了RoundRect被scaleBitmap填充，因此最终看到的是
+      //被scaleBitmap填充的RoundRect.
       mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
       //画出RoundRect，填充的内容有mPaint决定
