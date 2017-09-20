@@ -21,49 +21,37 @@ public class CircleImageView extends AppCompatImageView {
       super(context, attrs, defStyleAttr);
   }
 
-  private Paint mPaint;
-  private RoundRectShape mRroundRectShape;
-
   @Override
-  protected void onDraw(Canvas canvas) {
-  Drawable drawable = getDrawable();
+     protected void onDraw(Canvas canvas) {
 
-      if (drawable == null) {
-          return;
-      }
+         //设置外框的矩形区域
+         RectF rectF = new RectF(0,0, getWidth(),getHeight());
+         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+         paint.setColor(Color.RED);
+         paint.setStyle(Paint.Style.STROKE);
+         paint.setStrokeWidth(15);
+         //画出红色外框圆角矩形
+         canvas.drawRoundRect(rectF, 50, 50, paint);
 
-      //获取设置src的bitmap
-      Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
 
-      //剪切成和ImageView一样的width和height
-      Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
+        //以下代码引用自博客:https://enggm.wordpress.com/tag/android-custom-image-view-in-circular-shape/
+         Path path  = new Path();
+         //path划出一个圆角矩形，容纳图片,图片矩形区域设置比红色外框小，否则会覆盖住外框，随意控制
+         path.addRoundRect(new RectF(10, 10, getWidth()-10, getHeight()-10), 50, 50, Path.Direction.CW);
 
-      mPaint = new Paint();
-      mPaint.setAntiAlias(true);//抗锯齿,更平滑
+         canvas.clipPath(path);//将canvas裁剪到path设定的区域，往后的绘制都只能在此区域中，
 
-      //设置BitmapShader,指定了区域需要填充的Bitmap和填充方式，这里是CLAMP，拉伸式
-      mPaint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+         //这一句应该放在canvas.clipPath(path)之后,canvas.clipPath(path)只对裁剪之后的绘制起作用，
+         // 这个方法在ImageView中会画出xml设置的Drawable,落在刚才设置的path中
+         super.onDraw(canvas);
 
-      //设置两层图像叠加的模式,这里SRC_IN：显示两层图像交集的上层，这里上层是canvas绘制的RoundRect
-      //下层即ImageView设置的src图片，而mPaint.setShader指定了RoundRect被scaleBitmap填充，因此最终看到的是
-      //被scaleBitmap填充的RoundRect.
-      mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-
-      //画出RoundRect，填充的内容有mPaint决定
-      canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()),getWidth()/2, getHeight()/2, mPaint);
-
-  }
+     }
 }
 ```
 
-&emsp;&emsp; Paint.setShader(new BitmapShader(scaleBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))：
-shader指定scacleBitmap将要覆盖的模式，REPEAT, MIRROR, 或者CLAMP,其他
 
 
-    
-&emsp;&emsp; 整个原理就是先获取ImageView:src设置的Drawable，然后利用Bitmap.createScaledBitmap()剪切合适的大小，将其设置给BitmapShader,
-用以填充到RoundRect中，再设置Xfermode,取二层图像交集的上层，调用canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()),getWidth()/2, getHeight()/2, mPaint)画出RoundRect, 由于RoundRect区域小于下层的区域(ImageView宽和高决定),效果就是只显示
-被scaleBitmap填充的RoundRect, 当然可通过设置RoundRect的参数实现不同的角度，这里直接设置radius为witdth和height的1/2。
+&emsp;&emsp; 整个原理就是用Path划出一个圆角矩形区域，调用super.onDraw(canvas)就可以让Drawable 落在那个区域。
 
 使用，xml:
 
@@ -76,18 +64,25 @@ shader指定scacleBitmap将要覆盖的模式，REPEAT, MIRROR, 或者CLAMP,其�
     android:layout_height="match_parent"
     tools:context="com.example.why.traing2.MainActivity">
 
-        <com.example.why.traing2.CircleImageView
-            android:id="@+id/img_circle"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/gakki"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+       <com.example.why.traing2.CircleImageView
+           android:id="@+id/img_circle"
+           android:layout_width="200dp"
+           android:layout_height="200dp"
+           android:src="@drawable/gakki"
+           android:scaleType="centerCrop"
+           app:layout_constraintTop_toTopOf="parent"
+           android:layout_marginTop="8dp"
+           app:layout_constraintBottom_toBottomOf="parent"
+           android:layout_marginBottom="8dp"
+           android:layout_marginLeft="8dp"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:layout_constraintVertical_bias="0.501"
+           android:layout_marginRight="8dp"
+           app:layout_constraintRight_toRightOf="parent"
+           />
 
 </android.support.constraint.ConstraintLayout>
+
 
 ```
 
@@ -107,5 +102,5 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-&emsp;&emsp; PorterDuffXfermode模式效果官网链接:
-&emsp;&emsp; https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html
+
+看了好多的参考文章，发现上篇写错了，再写个觉得思路比较简单的，记录下。还可以用Shader, Xfermode实现。
