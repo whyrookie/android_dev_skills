@@ -9,43 +9,48 @@ CircleImageView代码：
 ```java
 public class CircleImageView extends AppCompatImageView {
 
-  public CircleImageView(Context context) {
-      this(context, null);
-  }
+    private Path mPath;
+    private RectF mRectF;
+    private Paint mPaint;
+    public CircleImageView(Context context) {
+        this(context, null);
+    }
 
-  public CircleImageView(Context context, AttributeSet attrs) {
-      this(context, attrs, 0);
-  }
+    public CircleImageView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-  public CircleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
-      super(context, attrs, defStyleAttr);
-  }
-
-  @Override
-     protected void onDraw(Canvas canvas) {
-
-         //设置外框的矩形区域
-         RectF rectF = new RectF(0,0, getWidth(),getHeight());
-         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-         paint.setColor(Color.RED);
-         paint.setStyle(Paint.Style.STROKE);
-         paint.setStrokeWidth(15);
-         //画出红色外框圆角矩形
-         canvas.drawRoundRect(rectF, 50, 50, paint);
+    public CircleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
 
 
-        //以下代码引用自博客:https://enggm.wordpress.com/tag/android-custom-image-view-in-circular-shape/
-         Path path  = new Path();
-         //path划出一个圆角矩形，容纳图片,图片矩形区域设置比红色外框小，否则会覆盖住外框，随意控制
-         path.addRoundRect(new RectF(10, 10, getWidth()-10, getHeight()-10), 50, 50, Path.Direction.CW);
+    private void init() {
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(Color.RED);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(15);
 
-         canvas.clipPath(path);//将canvas裁剪到path设定的区域，往后的绘制都只能在此区域中，
+        mPath  = new Path();
 
-         //这一句应该放在canvas.clipPath(path)之后,canvas.clipPath(path)只对裁剪之后的绘制起作用，
-         // 这个方法在ImageView中会画出xml设置的Drawable,落在刚才设置的path中
-         super.onDraw(canvas);
+    }
+    @Override
+    protected void onDraw(Canvas canvas) {
+        //设置外框的矩形区域，不可再init()初始化，构造器中width和height还未确定，可在onMesure()中获取并设置
+        mRectF = new RectF(0,0, getWidth(),getHeight());
+        //path划出一个圆角矩形，容纳图片,图片矩形区域设置比红色外框小，否则会覆盖住外框，随意控制
+        mPath.addRoundRect(new RectF(10, 10, mRectF.right-10,mRectF.bottom-10), 50, 50, Path.Direction.CW);
 
-     }
+        canvas.drawRoundRect(mRectF, 50, 50, mPaint); //画出红色外框圆角矩形
+
+        canvas.clipPath(mPath);//将canvas裁剪到path设定的区域，往后的绘制都只能在此区域中，
+
+        //这一句应该放在canvas.clipPath(path)之后,canvas.clipPath(path)只对裁剪之后的绘制起作用，
+        // 这个方法在ImageView中会画出xml设置的Drawable,落在刚才设置的path中
+        super.onDraw(canvas);
+
+    }
 }
 ```
 
@@ -103,4 +108,4 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-看了好多的参考文章，发现上篇写错了，再写个觉得思路比较简单的，记录下。还可以用Shader, Xfermode实现。
+看了些参考资料，发现上篇写错了，发现思路比较简单的，记录下。也可以用Shader, Xfermode实现,参考:https://enggm.wordpxress.com/tag/android-custom-image-view-in-circular-shape/
