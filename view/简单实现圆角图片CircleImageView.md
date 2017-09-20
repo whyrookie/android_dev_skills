@@ -2,7 +2,7 @@
 
 效果:
 
-![](https://github.com/whyrookie/android_dev_skills/blob/master/images/CircleImageView.png)
+![](https://github.com/whyrookie/android_dev_skills/blob/master/images/gakki.png)
 
 CircleImageView代码：
 
