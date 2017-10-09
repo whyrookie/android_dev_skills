@@ -4,6 +4,8 @@ Android夜间模式可以通过手动设置不同的Theme来实现，也有第�
 
 首先我们需要在style(res/values/style.xml)中生成我们需要主题:
 
+![](https://github.com/whyrookie/android_dev_skills/tree/master/images)
+
 ```xml
 <resources>
     <!-- Base application theme. -->
