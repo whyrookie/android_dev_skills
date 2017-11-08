@@ -157,6 +157,7 @@ public class CustomActivity extends AppCompatActivity {
 太过复杂，使用自定义view画出来有较大的难度，那么还有更简单的方法，让ui切出ProgressBar完整的图片，然后使用ClipDrawable根据
 进度的更新不断地显示，使用起来其实挺简单的，效果图:
 
+![](https://github.com/whyrookie/android_dev_skills/blob/master/images/gakki_alone.gif)
 
 先定义一个clipDrawable
 ```xml
