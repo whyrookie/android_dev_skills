@@ -1,6 +1,6 @@
 开发中经常需要自定义ProgressBar，这里是有了自定义View和ClipDrawable实现简单的ProgressBar
 自定义View效果:
-
+![](https://github.com/whyrookie/android_dev_skills/blob/master/images/custom_progress_bar.gif)
 
 ```java
 
