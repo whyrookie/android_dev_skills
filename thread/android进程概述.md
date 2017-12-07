@@ -31,7 +31,7 @@ Core Librarie:
 
 Linux prosess
 
-Linux 属于多用户系统，每个用户分配一个Id（数字）,系统根据这个Id追踪用户，每个用户拥有获取自身私有资源的权限，除了root(linux中的超级用户)，其他用户无法获取该权限。在android中，每个app包拥有一个唯一的用户Id,对应了Linux唯一的用户Id.Android 实际上是在Linux process中添加了一个Runtime，例如虚拟机(Davik/Art)：
+Linux 属于多用户系统，每个用户分配一个Id（数字）,系统根据这个Id追踪用户，每个用户拥有获取自身私有资源的权限，除了root(linux中的超级用户)，其他用户无法获取该权限。在Android中，每个app包拥有一个唯一的Id,对应了Linux中唯一的用户Id。Android 实际上是在Linux proecess中添加了一个Runtime，例如虚拟机(Davik/Art)，具体关系:
 
 ![](https://github.com/whyrookie/android_dev_skills/blob/master/images/android_process.jpg)
 
@@ -39,22 +39,22 @@ Linux 属于多用户系统，每个用户分配一个Id（数字）,系统根�
 
 Application 的生命周期:
 
-应用的生命周期其实被封装在了process中，Java 中用Application这个类代表，Application对象在Runtime调用它的onCreate()方法时开始初始化，在Runtime调用它的onTerminate()方法时停止
-,Linux 内核有可能在Runtime调用Application的onTerminate()之前被杀死,所以Application也会被销毁，Application在整个app的生命周期中是第一个创建，最后一个被销毁的。
+应用的生命周期被封装在了process中，Java 中用Application这个类作为代表，Application对象在Runtime调用它的onCreate()方法时开始初始化，在Runtime调用它的onTerminate()方法时停止
+,Linux 内核有可能在Runtime调用Application的onTerminate()之前被杀死,Application会也立即被销毁。Application在整个app的生命周期中是第一个被创建，最后一个被销毁的。
 
 Application的启动顺序:
-任何组件都可以作为Application启动的入口，一旦第一个组件被触发创建，Linux 进程就启动了，简化的顺序:
+任何组件都可以作为Application启动的入口，一旦第一个组件被触发创建，Linux 进程就启动了，Application也随之初始化，简化的顺序:
 
 1.启动 Linux process
 2.创建 Runtime
 3.创建 Application 对象
-4.创建 application的入口组件
+4.创建 Application的入口组件
 
-1.2两个步骤是长时间的操作，所以如果每次都要执行这两步的话，app的启动时间肯定会很长，体验太差，因此，android 为了节约每次app的创建时间，在系统启动的时候就创建了一个特殊的进程--Zygote(受精卵).Zygote拥有一些通用的预加载库，新的app创建的时候，只要fork(类似于复制，但不完全准确)Zygote进程，而不需要重新加载那些预加载库，因为可以共享通用的库，节省了大量的启动时间和内存资源。
+1.2两个步骤是长时间的操作，所以如果每次都要执行这两步的话，app的启动时间肯定会很长，体验太差，因此，Android 为了节约每次app的创建时间，在系统启动的时候就创建了一个特殊的进程--Zygote(受精卵).Zygote拥有一些通用的预加载库，新的app创建的时候，只要forkZygote进程，而不需要重新加载那些预加载库，因为可以共享这些核心库，节省了大量的启动时间和内存资源。
 
 Application停止:
 
-当系统内存资源紧缺的时候，系统会选择停止某些app。因为用户可能在任何时候启动app,所以为了快速启动app，即使app中的所以组件都被销毁了，app也没有完全被系统杀死，除非系统缺少资源，才会考虑杀死某个app，但如何在多个app中选择需要被杀死的app?android引入了一个进程等级机制，等级取决于app组件的显示和运行状态。级别高到低:
+当系统内存资源紧缺的时候，系统会选择停止某些app。因为用户可能在任何时候启动app,所以为了快速启动app，即使app中的所以组件都被销毁了，app也没有完全被系统杀死，除非系统缺少资源，才会考虑杀死某个app，但如何在多个app中选择需要被杀死的app?Android引入了一个进程等级机制，等级高低取决于app组件的显示和运行状态。级别高到低:
 
 Foreground:app有一个可见的组件，或者一个serviece被远程的一个可见的Activity绑定，或者BroadcastReceiver正在运行。
 
@@ -67,7 +67,7 @@ Background:不可见的Activity，大部分app都处于这种状态
 Empty：空进程，没有任何存活的组件，当系统回收资源时，最先被回收。
 
 线程的引入:
-Android设备都是多处理器的,可以同时运行多个任务。如果一个app没有并发运行就只能利用一个cpu,效率太低。其中的一个解决方法就是把任务放在多个进程中执行，但是多个进程必然占用大量的资源，并且进程间的通讯速度太慢，也没有高效的异步运行机制，所以使用多线程是个很好的解决方法。因为android只允许在UI线程更新ui，而android的绘制是要求是16ms/帧,这样才不会感觉到卡顿，所以长时间的任务不要放在UI线程阻塞UI的渲染，而应该放在后台线程去执行,这就需要用到多线程。长时间的任务通常包括以下几个:
+Android设备都是多处理器的,可以同时运行多个任务。如果一个app没有并发运行就只能利用一个cpu,效率太低。其中的一个解决方法就是把任务放在多个进程中执行，但是多个进程必然占用大量的资源，并且进程间的通讯速度太慢，也没有高效的异步运行机制，所以使用多线程是个很好的解决方法。因为Android只允许在UI线程更新ui，而Android的绘制是要求是16ms/帧,这样人眼才不会感觉到卡顿，所以长时间的任务不能放在UI线程阻塞UI的渲染，而应该放在后台线程去执行,这就需要用到多线程。长时间的任务通常包括以下几个:
 
 网络请求
 
